@@ -71,43 +71,32 @@ namespace UnrealLocres
             return b;
         }
 
-        private static uint64 UNALIGNED_LOAD64(byte[] p, int index)
+        private static uint32 ByteSwapUInt32(uint32 x)
         {
-            return BitConverter.ToUInt64(p, index);
+            return
+                (x >> 24) |
+                ((x & 0x00ff0000) >> 8) |
+                ((x & 0x0000ff00) << 8) |
+                (x << 24);
         }
 
-        private static uint32 UNALIGNED_LOAD32(byte[] p, int index)
+        private static uint64 ByteSwapUInt64(uint64 x)
         {
-            return BitConverter.ToUInt32(p, index);
-        }
-
-        private static uint bswap_32(uint x)
-        {
-            byte[] bytes = BitConverter.GetBytes(x);
-            Array.Reverse(bytes);
-            return BitConverter.ToUInt32(bytes, 0);
-        }
-
-        private static ulong bswap_64(ulong x)
-        {
-            byte[] bytes = BitConverter.GetBytes(x);
-            Array.Reverse(bytes);
-            return BitConverter.ToUInt64(bytes, 0);
-        }
-
-        private static uint uint32_in_expected_order(uint x)
-        {
-            return BigEndian ? bswap_32(x) : x;
-        }
-
-        private static ulong uint64_in_expected_order(ulong x)
-        {
-            return BigEndian ? bswap_64(x) : x;
+            return
+                (x >> 56) |
+                ((x & 0x00ff000000000000UL) >> 40) |
+                ((x & 0x0000ff0000000000UL) >> 24) |
+                ((x & 0x000000ff00000000UL) >> 8) |
+                ((x & 0x00000000ff000000UL) << 8) |
+                ((x & 0x0000000000ff0000UL) << 24) |
+                ((x & 0x000000000000ff00UL) << 40) |
+                (x << 56);
         }
 
         private static uint64 Fetch64(byte[] p, int index)
         {
-            return uint64_in_expected_order(UNALIGNED_LOAD64(p, index));
+            uint64 x = BitConverter.ToUInt64(p, index);
+            return BigEndian ? ByteSwapUInt64(x) : x;
         }
 
         private static uint64 Fetch64(byte[] p, uint index)
@@ -117,7 +106,8 @@ namespace UnrealLocres
 
         private static uint32 Fetch32(byte[] p, int index)
         {
-            return uint32_in_expected_order(UNALIGNED_LOAD32(p, index));
+            uint32 x = BitConverter.ToUInt32(p, index);
+            return BigEndian ? ByteSwapUInt32(x) : x;
         }
 
         private static uint32 Fetch32(byte[] p, uint index)
@@ -269,9 +259,9 @@ namespace UnrealLocres
                 h = Rotate32(h, 19);
                 h = h*5 + 0xe6546b64;
                 g ^= a4;
-                g = bswap_32(g)*5;
+                g = ByteSwapUInt32(g)*5;
                 h += a4*5;
-                h = bswap_32(h);
+                h = ByteSwapUInt32(h);
                 f += a0;
                 Permute3(ref f, ref h, ref g);
                 offset += 20;
@@ -403,11 +393,11 @@ namespace UnrealLocres
             uint64 h = Fetch64(s, len - 16) * mul;
             uint64 u = Rotate(a + g, 43) + (Rotate(b, 30) + c) * 9;
             uint64 v = ((a + g) ^ d) + f + 1;
-            uint64 w = bswap_64((u + v) * mul) + h;
+            uint64 w = ByteSwapUInt64((u + v) * mul) + h;
             uint64 x = Rotate(e + f, 42) + c;
-            uint64 y = (bswap_64((v + w) * mul) + g) * mul;
+            uint64 y = (ByteSwapUInt64((v + w) * mul) + g) * mul;
             uint64 z = e + f + c;
-            a = bswap_64((x + z) * mul + y) + b;
+            a = ByteSwapUInt64((x + z) * mul + y) + b;
             b = ShiftMix((z + a) * mul + d + h) * mul;
             return b + x;
         }
