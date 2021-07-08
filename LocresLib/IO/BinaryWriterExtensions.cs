@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace UnrealLocres.IO
+namespace LocresLib.IO
 {
     public static class BinaryWriterExtensions
     {

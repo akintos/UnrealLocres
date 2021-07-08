@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnrealLocres", "UnrealLocres\UnrealLocres.csproj", "{9C802CB9-94A3-4566-BE9A-3FE9A3AAD16F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnrealLocresTests", "UnrealLocresTests\UnrealLocresTests.csproj", "{8AF659D8-E048-4009-9D80-23636A50B510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocresLibTests", "LocresLibTests\LocresLibTests.csproj", "{8AF659D8-E048-4009-9D80-23636A50B510}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocresLib", "LocresLib\LocresLib.csproj", "{C0ED34DB-85F3-474A-8AB8-BD51925B020B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8AF659D8-E048-4009-9D80-23636A50B510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AF659D8-E048-4009-9D80-23636A50B510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AF659D8-E048-4009-9D80-23636A50B510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0ED34DB-85F3-474A-8AB8-BD51925B020B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0ED34DB-85F3-474A-8AB8-BD51925B020B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0ED34DB-85F3-474A-8AB8-BD51925B020B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0ED34DB-85F3-474A-8AB8-BD51925B020B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

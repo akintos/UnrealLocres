@@ -35,9 +35,9 @@ using System.Text;
 using uint8 = System.Byte;
 using uint32 = System.UInt32;
 using uint64 = System.UInt64;
-using uint128 = UnrealLocres.UInt128;
+using uint128 = LocresLib.UInt128;
 
-namespace UnrealLocres
+namespace LocresLib
 {
     /// <summary>
     ///     UE4 CityHash managed impl.

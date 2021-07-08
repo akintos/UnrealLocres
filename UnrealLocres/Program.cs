@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using LocresLib;
 using UnrealLocres.Converter;
 
 namespace UnrealLocres
@@ -106,6 +108,14 @@ namespace UnrealLocres
                 return -1;
             }
 
+            string translationPath = opt.TranslationInputPath;
+
+            if (!File.Exists(translationPath))
+            {
+                Console.Error.WriteLine($"Failed to find translation input file {translationPath}");
+                return 2;
+            }
+
             string outputPath = opt.LocresOutputPath;
 
             if (string.IsNullOrEmpty(outputPath))
@@ -126,6 +136,8 @@ namespace UnrealLocres
             {
                 locres.Save(file, locres.Version);
             }
+
+            Console.WriteLine($"Saved to {outputPath}");
 
             return 0;
         }

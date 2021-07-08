@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UnrealLocres
+namespace LocresLib
 {
     /// <summary>
     ///     Data versions for LocRes files.

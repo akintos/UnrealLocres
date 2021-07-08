@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UnrealLocres
+namespace LocresLib
 {
     public static class Crc
     {

@@ -6,7 +6,9 @@ using System.Text;
 using System.IO;
 using System.Linq;
 
-namespace UnrealLocres.Tests
+using LocresLib;
+
+namespace LocresLib.Tests
 {
     [TestClass()]
     public class LocalizationResourceFileTests
@@ -14,19 +16,25 @@ namespace UnrealLocres.Tests
         public static void LoadAndSaveTest(string filename, LocresVersion version)
         {
             var locres = TestHelper.LoadTestFile(filename);
-
             var totalCount = locres.TotalCount;
 
-            using var ms = new MemoryStream();
-            locres.Save(ms, version);
-        
-            ms.Seek(0, SeekOrigin.Begin);
+            byte[] bytes;
 
-            var locres2 = new LocresFile();
-            locres2.Load(ms);
+            using (var ms = new MemoryStream())
+            {
+                locres.Save(ms, version);
 
-            Assert.AreEqual(totalCount, locres2.TotalCount);
-            Assert.AreEqual(locres.Version, locres2.Version);
+                bytes = ms.ToArray();
+            }
+
+            using (var ms2 = new MemoryStream(bytes))
+            {
+                var locres2 = new LocresFile();
+                locres2.Load(ms2);
+
+                Assert.AreEqual(totalCount, locres2.TotalCount);
+                Assert.AreEqual(locres.Version, locres2.Version);
+            }
         }
 
         [TestMethod()]

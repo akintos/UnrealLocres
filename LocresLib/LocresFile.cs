@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using UnrealLocres.IO;
+using LocresLib.IO;
 
-namespace UnrealLocres
+namespace LocresLib
 {
     public class LocresFile : List<LocresNamespace>
     {
