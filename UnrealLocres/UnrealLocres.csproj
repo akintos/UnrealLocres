@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net46</TargetFramework>
+    <Authors>akintos</Authors>
   </PropertyGroup>
 
   <ItemGroup>
