@@ -15,7 +15,7 @@ positional arguments:
 
 optional arguments:
   -f, --format {csv,pot}  Output file format (csv, pot)
-  -o                      Output file path
+  -o                      Output file path (default: {locres_file_path}.{format})
 ```
 Export locres file. Default output format is csv.
 You should **never** change the key column. 
@@ -30,12 +30,25 @@ positional arguments:
 
 optional arguments:
   -f, --format {csv,pot}  Translation file format (csv, pot)
-  -o                      Output locres file path (default: locres_file_path.new)
+  -o                      Output locres file path (default: {locres_file_path}.new)
 ```
 Import translation file into original locres file and create new translated locres file.
 
+### Merge
+```
+usage: UnrealLocres.exe merge target_lucres_path source_lucres_path [-o output_path]
+
+positional arguments:
+  target_lucres_path      Merge target locres file path, the file you want to translate
+  source_lucres_path      Merge source locres file path, the file that has additional lines
+
+optional arguments:
+  -o                      Output locres file path (default: {target_lucres_path}.new)
+```
+Merge two locres files into one, adding strings that are present in source but not in target file.
+
 ## LocresLib
-Sample usage
+### Sample usage
 
 ```cs
 using LocresLib;
@@ -64,7 +77,7 @@ using (var file = File.Create(outputPath))
 }
 ```
 
-## UE4 Source code
+### UE4 Source code
 This library is based on original UE4 open source code
 
 [TextKey.cpp](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/TextKey.cpp)
