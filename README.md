@@ -39,14 +39,14 @@ Import translation file into original locres file and create new translated locr
 
 ### Merge
 ```
-usage: UnrealLocres.exe merge target_lucres_path source_lucres_path [-o output_path]
+usage: UnrealLocres.exe merge target_locres_path source_locres_path [-o output_path]
 
 positional arguments:
-  target_lucres_path      Merge target locres file path, the file you want to translate
-  source_lucres_path      Merge source locres file path, the file that has additional lines
+  target_locres_path      Merge target locres file path, the file you want to translate
+  source_locres_path      Merge source locres file path, the file that has additional lines
 
 optional arguments:
-  -o                      Output locres file path (default: {target_lucres_path}.new)
+  -o                      Output locres file path (default: {target_locres_path}.new)
 ```
 Merge two locres files into one, adding strings that are present in source but not in target file.
 
