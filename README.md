@@ -3,6 +3,9 @@ UnrealEngine 4 `TextLocalizationResource` library and export/import tool built w
 
 Can read/write every locres version up to 3 (latest)
 
+## Download
+Go to [releases](https://github.com/akintos/UnrealLocres/releases/latest) and download `UnrealLocres.exe`
+
 ## Usage
 `UnrealLocres` is a command line tool. You should use it in command line (cmd, powershell, etc.)
 
