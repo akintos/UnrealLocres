@@ -1,11 +1,15 @@
-﻿using CommandLine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using System.Diagnostics;
+using System.Reflection;
+
 using LocresLib;
 using UnrealLocres.Converter;
+
+using CommandLine;
 
 namespace UnrealLocres
 {
@@ -40,6 +44,14 @@ namespace UnrealLocres
             return ImporterDict.TryGetValue(extension, out importer);
         }
 
+        public static string EscapeTrimString(string value, int length)
+        {
+            value = value.Replace("\r", "").Replace("\n", " ");
+            if (value.Length > length)
+                value = value.Substring(0, length);
+            return value;
+        }
+
         [Verb("export", HelpText = "Export po file into other format.")]
         class ExportOptions
         {
@@ -66,6 +78,20 @@ namespace UnrealLocres
             public string TranslationInputFormat { get; set; }
 
             [Option('o', HelpText = "Translated locres file output path, default is [INPUT PATH].new")]
+            public string LocresOutputPath { get; set; }
+        }
+
+
+        [Verb("merge", HelpText = "Merge two locres files into one.")]
+        class MergeOptions
+        {
+            [Value(0, HelpText = "Merge target locres file path, the file you want to translate", MetaName = "TargetLocresPath", Required = true)]
+            public string TargetLocresPath { get; set; }
+
+            [Value(1, HelpText = "Merge source locres file path, the file that has additional lines", MetaName = "SourceLocresPath", Required = true)]
+            public string SourceLocresPath { get; set; }
+
+            [Option('o', HelpText = "Merged locres file output path, default is [TargetLocresPath].new")]
             public string LocresOutputPath { get; set; }
         }
 
@@ -142,15 +168,91 @@ namespace UnrealLocres
             return 0;
         }
 
+        private static int MergeAndExit(MergeOptions opt)
+        {
+            var targetLocres = new LocresFile();
+
+            try
+            {
+                using (var file = File.OpenRead(opt.TargetLocresPath))
+                {
+                    targetLocres.Load(file);
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.WriteLine($"Failed to open merge target locres file {opt.TargetLocresPath}");
+                throw;
+            }
+
+            var sourceLocres = new LocresFile();
+
+            try
+            {
+                using (var file = File.OpenRead(opt.SourceLocresPath))
+                {
+                    sourceLocres.Load(file);
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.WriteLine($"Failed to open merge source locres file {opt.SourceLocresPath}");
+                throw;
+            }
+
+            foreach (var targetNs in targetLocres)
+            {
+                var sourceNs = sourceLocres.FirstOrDefault(x => x.Name == targetNs.Name);
+                if (sourceNs is null)
+                    continue;
+
+                var targetKeySet = new HashSet<string>(targetNs.Select(x => x.Key));
+
+                foreach (var stringEntry in sourceNs)
+                {
+                    if (!targetKeySet.Contains(stringEntry.Key))
+                    {
+                        targetNs.Add(new LocresString(stringEntry.Key, stringEntry.Value, stringEntry.SourceStringHash));
+                        Console.WriteLine($"Added [{targetNs.Name}/{stringEntry.Key}] {EscapeTrimString(stringEntry.Value, 40)}");
+                    }
+                }
+
+                sourceLocres.Remove(sourceNs);
+            }
+
+            string outputPath = opt.LocresOutputPath;
+
+            if (string.IsNullOrEmpty(outputPath))
+            {
+                outputPath = opt.TargetLocresPath + ".new";
+            }
+            
+            using (var file = File.Create(outputPath))
+            {
+                targetLocres.Save(file, targetLocres.Version);
+            }
+
+            Console.WriteLine($"\nSaved to {outputPath}");
+
+            return 0;
+        }
+
         static int Main(string[] args)
         {
             RegisterConverter(new PoConverter());
             RegisterConverter(new CsvConverter());
 
-            var result = CommandLine.Parser.Default.ParseArguments<ExportOptions, ImportOptions>(args)
+            var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
+            Console.WriteLine($"UnrealLocres v{version}");
+            Console.WriteLine("https://github.com/akintos/UnrealLocres");
+            Console.WriteLine("");
+
+            var result = Parser.Default.ParseArguments<ExportOptions, ImportOptions, MergeOptions>(args)
                 .MapResult(
                 (ExportOptions opt) => ExportAndExit(opt),
                 (ImportOptions opt) => ImportAndExit(opt),
+                (MergeOptions opt) => MergeAndExit(opt),
                 errs => 1);
 
             return result;
