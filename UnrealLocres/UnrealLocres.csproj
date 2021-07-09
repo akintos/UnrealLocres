@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net46</TargetFramework>
     <Authors>akintos</Authors>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
