@@ -10,7 +10,7 @@ namespace UnrealLocres.Converter
     {
         public override string ExportExtension => "pot";
 
-        public override string ImportExtension => "po";
+        public override string ImportExtension => "pot"; // bug de import 
 
         protected override List<TranslationEntry> Read(TextReader reader)
         {
