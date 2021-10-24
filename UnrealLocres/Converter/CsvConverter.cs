@@ -12,7 +12,7 @@ namespace UnrealLocres.Converter
     public sealed class CsvConverter : BaseConverter
     {
 
-        private static readonly CsvOptions options = new CsvOptions() { AllowNewLineInEnclosedFieldValues = true, AllowSingleQuoteToEncloseFieldValues = true };
+        private static readonly CsvOptions options = new CsvOptions() { AllowNewLineInEnclosedFieldValues = true };
 
         public override string ExportExtension => "csv";
 
